@@ -72,12 +72,7 @@ public class UserController {
         if (user == null) throw new RuntimeException("提示: 无效Token!");
         List<VideoVO> videoVOS = playedService.queryByUserId(user.getId(), page, rows);
         log.info("当前用户播放历史的视频为: {}", JSONUtils.writeValueAsString(videoVOS));
-        ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(5, 7, 1, TimeUnit.MICROSECONDS, new ArrayBlockingQueue<>(2), new ThreadFactory() {
-            @Override
-            public Thread newThread(Runnable r) {
-                return null;
-            }
-        }, new ThreadPoolExecutor.AbortPolicy());
+      
         ExecutorService executorService = Executors.newFixedThreadPool(3);
         ExecutorService executorService1 = Executors.newCachedThreadPool();
         executorService.execute(new Runnable() {
