@@ -1,0 +1,41 @@
+server:
+  port: 9992
+
+spring:
+  application:
+    name: API-USERS
+  cloud:
+    nacos:
+      server-addr: 10.15.0.3:8848
+  redis:
+    host: 10.15.0.3
+    port: 6379
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.15.0.3:3306/yingxue?characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: root
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+
+mybatis:
+  mapper-locations: classpath:com/baizhi/mapper/*.xml
+  type-aliases-package: com.baizhi.entity
+
+logging:
+  level:
+    com:
+      baizhi:
+        dao: debug
+
+#设置openfeign调用超时
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 100000
+        readTimeout: 100000

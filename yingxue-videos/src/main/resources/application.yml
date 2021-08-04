@@ -1,0 +1,36 @@
+server:
+  port: 9993
+
+spring:
+  application:
+    name: API-VIDEOS
+  cloud:
+    nacos:
+      server-addr: 10.15.0.3:8848
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://10.15.0.3:3306/yingxue?characterEncoding=UTF-8&useSSL=false
+    username: root
+    password: root
+  redis:
+    host: 10.15.0.3
+    port: 6379
+  rabbitmq:
+    host: 10.15.0.3
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: / #类似于数据库概念
+
+
+mybatis:
+  mapper-locations: classpath:com/baizhi/mapper/*.xml
+  type-aliases-package: com.baizhi.entity
+
+logging:
+  level:
+    com:
+      baizhi:
+        dao: debug

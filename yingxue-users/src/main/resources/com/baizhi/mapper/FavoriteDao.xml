@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.FavoriteDao">
+
+    <resultMap type="com.baizhi.entity.Favorite" id="FavoriteMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+        <result property="videoId" column="video_id" jdbcType="INTEGER"/>
+        <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+        <result property="deletedAt" column="deleted_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="FavoriteMap">
+        select
+          id, uid, video_id, created_at, updated_at, deleted_at
+        from yingxue.favorite
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="FavoriteMap">
+        select
+          id, uid, video_id, created_at, updated_at, deleted_at
+        from yingxue.favorite
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="FavoriteMap">
+        select
+          id, uid, video_id, created_at, updated_at, deleted_at
+        from yingxue.favorite
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="videoId != null">
+                and video_id = #{videoId}
+            </if>
+            <if test="createdAt != null">
+                and created_at = #{createdAt}
+            </if>
+            <if test="updatedAt != null">
+                and updated_at = #{updatedAt}
+            </if>
+            <if test="deletedAt != null">
+                and deleted_at = #{deletedAt}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into yingxue.favorite(uid, video_id, created_at, updated_at, deleted_at)
+        values (#{uid}, #{videoId}, #{createdAt}, #{updatedAt}, #{deletedAt})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update yingxue.favorite
+        <set>
+            <if test="uid != null">
+                uid = #{uid},
+            </if>
+            <if test="videoId != null">
+                video_id = #{videoId},
+            </if>
+            <if test="createdAt != null">
+                created_at = #{createdAt},
+            </if>
+            <if test="updatedAt != null">
+                updated_at = #{updatedAt},
+            </if>
+            <if test="deletedAt != null">
+                deleted_at = #{deletedAt},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from yingxue.favorite where id = #{id}
+    </delete>
+
+
+
+    <!--我的收藏-->
+    <select id="queryByUserId"  resultMap="FavoriteMap">
+        select
+            id, uid, video_id, created_at, updated_at, deleted_at
+        from yingxue.favorite
+        where uid = #{id}
+    </select>
+
+    <!--取消收藏-->
+    <delete id="deleteByVideoIdAndUserId">
+        delete from yingxue.favorite where video_id = #{videoId} and uid = #{userId}
+    </delete>
+
+
+    <!--查询是否收藏过改视频-->
+    <select id="queryByVideoIdAndUserId" resultMap="FavoriteMap">
+        select
+            id, uid, video_id, created_at, updated_at, deleted_at
+        from yingxue.favorite
+        where uid = #{userId} and video_id = #{videoId}
+    </select>
+
+</mapper>

@@ -1,0 +1,16 @@
+server:
+  port: 9095
+spring:
+  application:
+    name: API-SEARCH
+  cloud:
+    nacos:
+      server-addr: 10.15.0.3:8848
+
+  rabbitmq:
+    host: 10.15.0.3
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+

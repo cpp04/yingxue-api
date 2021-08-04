@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baizhi.dao.VideoDao">
+
+    <resultMap type="com.baizhi.entity.Video" id="VideoMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="intro" column="intro" jdbcType="VARCHAR"/>
+        <result property="uid" column="uid" jdbcType="INTEGER"/>
+        <result property="cover" column="cover" jdbcType="VARCHAR"/>
+        <result property="link" column="link" jdbcType="VARCHAR"/>
+        <result property="categoryId" column="category_id" jdbcType="INTEGER"/>
+        <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        <result property="updatedAt" column="updated_at" jdbcType="TIMESTAMP"/>
+        <result property="deletedAt" column="deleted_at" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="VideoMap">
+        select
+          id, title, intro, uid, cover, link, category_id, created_at, updated_at, deleted_at
+        from yingxue.video
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="VideoMap">
+        select
+          id, title, intro, uid, cover, link, category_id, created_at, updated_at, deleted_at
+        from yingxue.video
+        limit #{offset}, #{limit}
+    </select>
+
+
+    <!--查询总条数-->
+    <select id="findTotalCounts" resultType="Long">
+         select
+          count(id)
+        from yingxue.video
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="VideoMap">
+        select
+          id, title, intro, uid, cover, link, category_id, created_at, updated_at, deleted_at
+        from yingxue.video
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="intro != null and intro != ''">
+                and intro = #{intro}
+            </if>
+            <if test="uid != null">
+                and uid = #{uid}
+            </if>
+            <if test="cover != null and cover != ''">
+                and cover = #{cover}
+            </if>
+            <if test="link != null and link != ''">
+                and link = #{link}
+            </if>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="createdAt != null">
+                and created_at = #{createdAt}
+            </if>
+            <if test="updatedAt != null">
+                and updated_at = #{updatedAt}
+            </if>
+            <if test="deletedAt != null">
+                and deleted_at = #{deletedAt}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into yingxue.video(title, intro, uid, cover, link, category_id, created_at, updated_at, deleted_at)
+        values (#{title}, #{intro}, #{uid}, #{cover}, #{link}, #{categoryId}, #{createdAt}, #{updatedAt}, #{deletedAt})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update yingxue.video
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="intro != null and intro != ''">
+                intro = #{intro},
+            </if>
+            <if test="uid != null">
+                uid = #{uid},
+            </if>
+            <if test="cover != null and cover != ''">
+                cover = #{cover},
+            </if>
+            <if test="link != null and link != ''">
+                link = #{link},
+            </if>
+            <if test="categoryId != null">
+                category_id = #{categoryId},
+            </if>
+            <if test="createdAt != null">
+                created_at = #{createdAt},
+            </if>
+            <if test="updatedAt != null">
+                updated_at = #{updatedAt},
+            </if>
+            <if test="deletedAt != null">
+                deleted_at = #{deletedAt},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from yingxue.video where id = #{id}
+    </delete>
+
+
+    <resultMap id="VideoCategoryUserMap" type="com.baizhi.entity.Video" extends="VideoMap">
+        <result property="category" column="category"  jdbcType="VARCHAR"/>
+        <!--维护用户-->
+        <association property="uploader" javaType="com.baizhi.entity.User">
+            <result property="id" column="userid" jdbcType="INTEGER"/>
+            <result property="name" column="username" jdbcType="VARCHAR"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+            <result property="intro" column="intro" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="phoneLinked" column="phone_linked" jdbcType="OTHER"/>
+            <result property="openid" column="openid" jdbcType="VARCHAR"/>
+            <result property="wechatLinked" column="wechat_linked" jdbcType="OTHER"/>
+            <result property="followingCount" column="following_count" jdbcType="INTEGER"/>
+            <result property="followersCount" column="followers_count" jdbcType="INTEGER"/>
+            <result property="createdAt" column="ucreated" jdbcType="TIMESTAMP"/>
+            <result property="updatedAt" column="updated" jdbcType="TIMESTAMP"/>
+            <result property="deletedAt" column="udeleted" jdbcType="TIMESTAMP"/>
+        </association>
+    </resultMap>
+
+
+    <!--根据用户查询上传视频列表-->
+    <select id="findAllByUserId" resultMap="VideoMap">
+        select
+            id, title, intro, uid, cover, link, category_id, created_at, updated_at, deleted_at
+        from yingxue.video
+        where uid = #{id}
+    </select>
+
+
+    <!--根据类表id查询视频列表-->
+    <select id="findAllByCategoryId" resultMap="VideoMap">
+        select
+            id, title, intro, uid, cover, link, category_id, created_at, updated_at, deleted_at
+        from yingxue.video
+        where category_id = #{categoryId}
+        limit #{offset},#{limit}
+    </select>
+
+
+
+
+</mapper>
